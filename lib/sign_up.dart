@@ -1,57 +1,35 @@
-import 'package:firebase_app/home_screen.dart';
-import 'package:firebase_app/sign_up.dart';
+import 'package:firebase_app/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
-import 'global.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
-  runApp(
-    MaterialApp(
-      theme: ThemeData(
-        textTheme: TextTheme(
-          bodyText2: GoogleFonts.poppins(color: Colors.black),
-        ),
-      ),
-      debugShowCheckedModeBanner: false,
-      routes: {
-        '/': (context) => const MyApp(),
-        'signUp': (context) => const SignUp(),
-        'home': (context) => const HomeScreen(),
-      },
-    ),
-  );
-}
-
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class SignUp extends StatefulWidget {
+  const SignUp({Key? key}) : super(key: key);
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _MyAppState extends State<MyApp> {
-  GlobalKey<FormState> signInKey = GlobalKey<FormState>();
+class _SignUpState extends State<SignUp> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
-  String signInEmail = "", signInPass = "";
+  GlobalKey<FormState> signUpKey = GlobalKey<FormState>();
+  String signUpEmail = "", signUpPass = "";
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
-        key: signInKey,
+        key: signUpKey,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(20),
             child: ListView(
               children: [
                 const SizedBox(height: 150,),
-                const Text("Sign IN", style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600,),),
+                const Text("Sign UP", style: TextStyle(fontSize: 30, fontWeight: FontWeight.w600,),),
                 const SizedBox(height: 50,),
                 TextFormField(
                   controller: emailController,
@@ -65,12 +43,12 @@ class _MyAppState extends State<MyApp> {
                   },
                   style: GoogleFonts.poppins(color: Colors.black),
                   decoration: const InputDecoration(
-                    border: OutlineInputBorder(),
-                    hintText: "Email"
+                      border: OutlineInputBorder(),
+                      hintText: "Email"
                   ),
                   onSaved: (val){
                     setState(() {
-                      signInEmail = val.toString();
+                      signUpEmail = val.toString();
                     });
                   },
                 ),
@@ -92,33 +70,39 @@ class _MyAppState extends State<MyApp> {
                   ),
                   onSaved: (val){
                     setState(() {
-                      signInPass = val.toString();
+                      signUpPass = val.toString();
                     });
                   },
                 ),
                 const SizedBox(height: 100,),
-                (Global.isLogin == true) ? Center(child: const CircularProgressIndicator()): CupertinoButton.filled(
+                CupertinoButton.filled(
                   onPressed: () async {
-                    Global.isLogin = true;
-                    if(signInKey.currentState!.validate()) {
-                      signInKey.currentState!.save();
-                      try {
-                        final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(email: signInEmail, password: signInPass);
-                        Navigator.pushNamed(context, 'home', arguments: signInEmail);
-                        setState((){
-                          Global.isLogin = false;
-                        });
-                      } catch(e) {
-                        print(e);
+                      if(signUpKey.currentState!.validate()) {
+                        signUpKey.currentState!.save();
+                        try {
+                          final credential = await FirebaseAuth.instance
+                              .createUserWithEmailAndPassword(
+                            email: signUpEmail, password: signUpPass,
+                          );
+                          Navigator.pushNamed(context, 'home', arguments: signUpEmail);
+                        } catch(e) {
+                          print(e);
+                        }
                       }
-                    }
                   },
-                  child: const Text("Sign in"),
+                  child: const Text("Sign UP"),
                 ),
-                const SizedBox(height: 100,),
+                const SizedBox(height: 50,),
+                CupertinoButton.filled(
+                  onPressed: ()  {
+                    AuthHelper().authGoogle();
+                  },
+                  child: const Text("Google Login"),
+                ),
+                const SizedBox(height: 50),
                 TextButton(
-                  onPressed: () => Navigator.pushNamed(context, 'signUp'),
-                  child: const Text("Sign Up Account",
+                  onPressed: () => Navigator.pushNamed(context, '/'),
+                  child: const Text("Already Exit An Account",
                     style: TextStyle(
                       fontSize: 20,
                       decoration: TextDecoration.underline,
