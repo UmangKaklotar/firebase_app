@@ -1,49 +1,27 @@
-import 'package:firebase_app/home_screen.dart';
-import 'package:firebase_app/sign_up.dart';
+import 'package:firebase_app/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'global.dart';
 
-void main() {
-  WidgetsFlutterBinding.ensureInitialized();
-  Firebase.initializeApp();
-  runApp(
-    MaterialApp(
-      theme: ThemeData(
-        textTheme: TextTheme(
-          bodyText2: GoogleFonts.poppins(color: Colors.black),
-        ),
-      ),
-      debugShowCheckedModeBanner: false,
-      routes: {
-        '/': (context) => const MyApp(),
-        'signUp': (context) => const SignUp(),
-        'home': (context) => const HomeScreen(),
-      },
-    ),
-  );
-}
-
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
+class SignUp extends StatefulWidget {
+  const SignUp({Key? key}) : super(key: key);
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _MyAppState extends State<MyApp> {
-  GlobalKey<FormState> signInKey = GlobalKey<FormState>();
+class _SignUpState extends State<SignUp> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
+  GlobalKey<FormState> signUpKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
-        key: signInKey,
+        key: signUpKey,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -53,7 +31,7 @@ class _MyAppState extends State<MyApp> {
                   height: 150,
                 ),
                 const Text(
-                  "Sign IN",
+                  "Sign UP",
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.w600,
@@ -79,7 +57,7 @@ class _MyAppState extends State<MyApp> {
                       border: OutlineInputBorder(), hintText: "Email"),
                   onSaved: (val) {
                     setState(() {
-                      Global.signInEmail = val.toString();
+                      Global.signUpEmail = val.toString();
                     });
                   },
                 ),
@@ -103,7 +81,7 @@ class _MyAppState extends State<MyApp> {
                       border: OutlineInputBorder(), hintText: "Password"),
                   onSaved: (val) {
                     setState(() {
-                      Global.signInPass = val.toString();
+                      Global.signUpPass = val.toString();
                     });
                   },
                 ),
@@ -111,31 +89,27 @@ class _MyAppState extends State<MyApp> {
                   height: 100,
                 ),
                 (Global.isLogin == true)
-                    ? Center(child: const CircularProgressIndicator())
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
                     : CupertinoButton.filled(
                         onPressed: () async {
                           Global.isLogin = true;
-                          if (signInKey.currentState!.validate()) {
-                            signInKey.currentState!.save();
+                          if (signUpKey.currentState!.validate()) {
+                            signUpKey.currentState!.save();
                             try {
                               final credential = await FirebaseAuth.instance
-                                  .signInWithEmailAndPassword(
-                                email: Global.signInEmail,
-                                password: Global.signInPass,
+                                  .createUserWithEmailAndPassword(
+                                email: Global.signUpEmail,
+                                password: Global.signUpPass,
                               );
 
                               User? user;
                               user = credential.user;
                               print("Register User : $user");
 
-                              // ScaffoldMessenger.of(context)
-                              //     .showSnackBar(
-                              //   SnackBar(
-                              //     content: Text("Sign In Successfully"),
-                              //   ),
-                              // ));
                               Navigator.pushNamed(context, 'home',
-                                  arguments: Global.signInEmail);
+                                  arguments: Global.signUpEmail);
                               setState(() {
                                 Global.isLogin = false;
                               });
@@ -144,15 +118,22 @@ class _MyAppState extends State<MyApp> {
                             }
                           }
                         },
-                        child: const Text("Sign in"),
+                        child: const Text("Sign UP"),
                       ),
                 const SizedBox(
-                  height: 100,
+                  height: 50,
                 ),
+                CupertinoButton.filled(
+                  onPressed: () {
+                    AuthHelper().authGoogle();
+                  },
+                  child: const Text("Google Login"),
+                ),
+                const SizedBox(height: 50),
                 TextButton(
-                  onPressed: () => Navigator.pushNamed(context, 'signUp'),
+                  onPressed: () => Navigator.pop(context),
                   child: const Text(
-                    "Sign Up Account",
+                    "Already Exit An Account",
                     style: TextStyle(
                       fontSize: 20,
                       decoration: TextDecoration.underline,
