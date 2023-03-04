@@ -15,20 +15,20 @@ class _HomeScreenState extends State<HomeScreen> {
     String email = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            Text(email),
-            CupertinoButton.filled(
-              child: Text("Log Out"),
-              onPressed: () async {
-                await FirebaseAuth.instance.signOut();
-                Navigator.pop(context);
-              },
-            ),
-          ],
-        )
-      ),
+          child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Text(email),
+          CupertinoButton.filled(
+            child: Text("Log Out"),
+            onPressed: () async {
+              await FirebaseAuth.instance.signOut();
+
+              Navigator.pop(context);
+            },
+          ),
+        ],
+      )),
     );
   }
 }
