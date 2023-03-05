@@ -113,6 +113,20 @@ class _SignUpState extends State<SignUp> {
                               setState(() {
                                 Global.isLogin = false;
                               });
+                            } on FirebaseAuthException catch (e) {
+                              setState(() {
+                                Global.isLogin = false;
+                              });
+                              if (e.code == 'weak-password') {
+                                print('The password provided is too weak.');
+                              } else if (e.code == 'email-already-in-use') {
+                                print('The account already exists for that email.');
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("The account already exists for that email."),
+                                  ),
+                                );
+                              }
                             } catch (e) {
                               print(e);
                             }
