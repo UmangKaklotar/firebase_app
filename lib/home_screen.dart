@@ -12,19 +12,19 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
-    String email = ModalRoute.of(context)!.settings.arguments as String;
+    // String email = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       body: Center(
           child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text(email),
+          Text("Umang Kaklotar"),
           CupertinoButton.filled(
             child: Text("Log Out"),
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
 
-              Navigator.pop(context);
+              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
             },
           ),
         ],

@@ -1,4 +1,3 @@
-import 'package:firebase_app/auth.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,22 +5,22 @@ import 'package:google_fonts/google_fonts.dart';
 
 import 'global.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({Key? key}) : super(key: key);
+class SignIn extends StatefulWidget {
+  const SignIn({Key? key}) : super(key: key);
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<SignIn> createState() => _SignInState();
 }
 
-class _SignUpState extends State<SignUp> {
+class _SignInState extends State<SignIn> {
+  GlobalKey<FormState> signInKey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   TextEditingController passController = TextEditingController();
-  GlobalKey<FormState> signUpKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
-        key: signUpKey,
+        key: signInKey,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -31,7 +30,7 @@ class _SignUpState extends State<SignUp> {
                   height: 150,
                 ),
                 const Text(
-                  "Sign UP",
+                  "Sign IN",
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.w600,
@@ -57,7 +56,7 @@ class _SignUpState extends State<SignUp> {
                       border: OutlineInputBorder(), hintText: "Email"),
                   onSaved: (val) {
                     setState(() {
-                      Global.signUpEmail = val.toString();
+                      Global.signInEmail = val.toString();
                     });
                   },
                 ),
@@ -81,7 +80,7 @@ class _SignUpState extends State<SignUp> {
                       border: OutlineInputBorder(), hintText: "Password"),
                   onSaved: (val) {
                     setState(() {
-                      Global.signUpPass = val.toString();
+                      Global.signInPass = val.toString();
                     });
                   },
                 ),
@@ -89,19 +88,17 @@ class _SignUpState extends State<SignUp> {
                   height: 100,
                 ),
                 (Global.isLogin == true)
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
+                    ? Center(child: const CircularProgressIndicator())
                     : CupertinoButton.filled(
                         onPressed: () async {
                           Global.isLogin = true;
-                          if (signUpKey.currentState!.validate()) {
-                            signUpKey.currentState!.save();
+                          if (signInKey.currentState!.validate()) {
+                            signInKey.currentState!.save();
                             try {
                               final credential = await FirebaseAuth.instance
-                                  .createUserWithEmailAndPassword(
-                                email: Global.signUpEmail,
-                                password: Global.signUpPass,
+                                  .signInWithEmailAndPassword(
+                                email: Global.signInEmail,
+                                password: Global.signInPass,
                               );
 
                               // User? user;
@@ -119,39 +116,34 @@ class _SignUpState extends State<SignUp> {
                               setState(() {
                                 Global.isLogin = false;
                               });
-                              if (e.code == 'weak-password') {
-                                print('The password provided is too weak.');
-                              } else if (e.code == 'email-already-in-use') {
-                                print(
-                                    'The account already exists for that email.');
+                              if (e.code == 'user-not-found') {
+                                print('No user found for that email.');
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                    content: Text(
-                                        "The account already exists for that email."),
+                                    content:
+                                        Text("No user found for that email."),
+                                  ),
+                                );
+                              } else if (e.code == 'wrong-password') {
+                                print('Wrong password provided.');
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                    content: Text("Wrong password provided."),
                                   ),
                                 );
                               }
-                            } catch (e) {
-                              print(e);
                             }
                           }
                         },
-                        child: const Text("Sign UP"),
+                        child: const Text("Sign in"),
                       ),
                 const SizedBox(
-                  height: 50,
+                  height: 100,
                 ),
-                CupertinoButton.filled(
-                  onPressed: () {
-                    AuthHelper().authGoogle();
-                  },
-                  child: const Text("Google Login"),
-                ),
-                const SizedBox(height: 50),
                 TextButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => Navigator.pushNamed(context, 'signUp'),
                   child: const Text(
-                    "Already Exit An Account",
+                    "Sign Up Account",
                     style: TextStyle(
                       fontSize: 20,
                       decoration: TextDecoration.underline,
