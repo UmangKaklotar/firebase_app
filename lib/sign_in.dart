@@ -88,7 +88,7 @@ class _SignInState extends State<SignIn> {
                   height: 100,
                 ),
                 (Global.isLogin == true)
-                    ? Center(child: const CircularProgressIndicator())
+                    ? const Center(child: CircularProgressIndicator())
                     : CupertinoButton.filled(
                         onPressed: () async {
                           Global.isLogin = true;
@@ -101,17 +101,19 @@ class _SignInState extends State<SignIn> {
                                 password: Global.signInPass,
                               );
 
-                              // User? user;
-                              // user = credential.user;
-                              // print("Register User : $user");
+                              Global.user = credential.user;
+                              print("Register User : ${Global.user}");
 
+                              // ignore: use_build_context_synchronously
                               Navigator.pushReplacementNamed(
                                 context,
                                 'home',
                               );
+
                               setState(() {
                                 Global.isLogin = false;
                               });
+
                             } on FirebaseAuthException catch (e) {
                               setState(() {
                                 Global.isLogin = false;
@@ -119,7 +121,7 @@ class _SignInState extends State<SignIn> {
                               if (e.code == 'user-not-found') {
                                 print('No user found for that email.');
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
+                                  const SnackBar(
                                     content:
                                         Text("No user found for that email."),
                                   ),
@@ -127,7 +129,7 @@ class _SignInState extends State<SignIn> {
                               } else if (e.code == 'wrong-password') {
                                 print('Wrong password provided.');
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
+                                  const SnackBar(
                                     content: Text("Wrong password provided."),
                                   ),
                                 );

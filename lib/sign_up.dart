@@ -104,17 +104,19 @@ class _SignUpState extends State<SignUp> {
                                 password: Global.signUpPass,
                               );
 
-                              // User? user;
-                              // user = credential.user;
-                              // print("Register User : $user");
+                              Global.user = credential.user;
+                              print("Register User : ${Global.user}");
 
+                              // ignore: use_build_context_synchronously
                               Navigator.pushReplacementNamed(
                                 context,
                                 'home',
                               );
+
                               setState(() {
                                 Global.isLogin = false;
                               });
+
                             } on FirebaseAuthException catch (e) {
                               setState(() {
                                 Global.isLogin = false;
@@ -125,7 +127,7 @@ class _SignUpState extends State<SignUp> {
                                 print(
                                     'The account already exists for that email.');
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(
+                                  const SnackBar(
                                     content: Text(
                                         "The account already exists for that email."),
                                   ),

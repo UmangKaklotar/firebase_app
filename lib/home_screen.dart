@@ -20,10 +20,11 @@ class _HomeScreenState extends State<HomeScreen> {
         children: [
           Text("Umang Kaklotar"),
           CupertinoButton.filled(
-            child: Text("Log Out"),
+            child: const Text("Log Out"),
             onPressed: () async {
               await FirebaseAuth.instance.signOut();
 
+              // ignore: use_build_context_synchronously
               Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
             },
           ),
