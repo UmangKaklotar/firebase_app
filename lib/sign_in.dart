@@ -52,8 +52,12 @@ class _SignInState extends State<SignIn> {
                     }
                   },
                   style: GoogleFonts.poppins(color: Colors.black),
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(), hintText: "Email"),
+                  decoration: InputDecoration(
+                    hintText: "Email",
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    errorStyle: GoogleFonts.poppins(),
+                  ),
                   onSaved: (val) {
                     setState(() {
                       Global.signInEmail = val.toString();
@@ -76,8 +80,12 @@ class _SignInState extends State<SignIn> {
                   },
                   controller: passController,
                   style: GoogleFonts.poppins(color: Colors.black),
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(), hintText: "Password"),
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
+                    contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    hintText: "Password",
+                    errorStyle: GoogleFonts.poppins(),
+                  ),
                   onSaved: (val) {
                     setState(() {
                       Global.signInPass = val.toString();
@@ -90,11 +98,16 @@ class _SignInState extends State<SignIn> {
                 (Global.isLogin == true)
                     ? const Center(child: CircularProgressIndicator())
                     : CupertinoButton.filled(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        borderRadius: BorderRadius.circular(30),
                         onPressed: () async {
-                          Global.isLogin = true;
                           if (signInKey.currentState!.validate()) {
                             signInKey.currentState!.save();
                             try {
+                              setState(() {
+                                Global.isLogin = true;
+                              });
+
                               final credential = await FirebaseAuth.instance
                                   .signInWithEmailAndPassword(
                                 email: Global.signInEmail,
@@ -137,16 +150,16 @@ class _SignInState extends State<SignIn> {
                             }
                           }
                         },
-                        child: const Text("Sign in"),
+                        child: Text("Sign in", style: GoogleFonts.poppins(),),
                       ),
                 const SizedBox(
                   height: 100,
                 ),
                 TextButton(
                   onPressed: () => Navigator.pushNamed(context, 'signUp'),
-                  child: const Text(
+                  child: Text(
                     "Sign Up Account",
-                    style: TextStyle(
+                    style: GoogleFonts.poppins(
                       fontSize: 20,
                       decoration: TextDecoration.underline,
                     ),

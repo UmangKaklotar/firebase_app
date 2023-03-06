@@ -14,6 +14,7 @@ Future<void> main() async {
       theme: ThemeData(
         textTheme: TextTheme(
           bodyText2: GoogleFonts.poppins(color: Colors.black),
+          bodyText1: GoogleFonts.poppins(color: Colors.black),
         ),
       ),
       debugShowCheckedModeBanner: false,
