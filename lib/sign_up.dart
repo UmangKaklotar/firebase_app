@@ -153,7 +153,7 @@ class _SignUpState extends State<SignUp> {
                 TextButton(
                   onPressed: () => Navigator.pop(context),
                   child: const Text(
-                    "Already Exit An Account",
+                    "Already Exists An Account",
                     style: TextStyle(
                       fontSize: 20,
                       decoration: TextDecoration.underline,

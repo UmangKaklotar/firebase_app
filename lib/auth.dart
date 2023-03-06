@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
+import 'global.dart';
+
 class AuthHelper {
   authGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
@@ -11,9 +13,8 @@ class AuthHelper {
       idToken: googleAuth.idToken,
     );
     final google = await FirebaseAuth.instance.signInWithCredential(credential);
-    // User? user;
-    // user = google.user;
-    // print(user);
+    Global.user = google.user;
+    print(Global.user);
     return google;
   }
 }
