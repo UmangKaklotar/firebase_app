@@ -18,7 +18,7 @@ class _HomeScreenState extends State<HomeScreen> {
           child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          Text("Umang Kaklotar"),
+          const Text("Umang Kaklotar"),
           CupertinoButton.filled(
             child: const Text("Log Out"),
             onPressed: () async {

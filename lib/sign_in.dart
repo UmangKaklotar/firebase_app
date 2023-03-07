@@ -1,4 +1,4 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_app/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -54,8 +54,10 @@ class _SignInState extends State<SignIn> {
                   style: GoogleFonts.poppins(color: Colors.black),
                   decoration: InputDecoration(
                     hintText: "Email",
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
                     errorStyle: GoogleFonts.poppins(),
                   ),
                   onSaved: (val) {
@@ -81,8 +83,10 @@ class _SignInState extends State<SignIn> {
                   controller: passController,
                   style: GoogleFonts.poppins(color: Colors.black),
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
                     hintText: "Password",
                     errorStyle: GoogleFonts.poppins(),
                   ),
@@ -100,57 +104,16 @@ class _SignInState extends State<SignIn> {
                     : CupertinoButton.filled(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         borderRadius: BorderRadius.circular(30),
-                        onPressed: () async {
+                        onPressed: () {
                           if (signInKey.currentState!.validate()) {
                             signInKey.currentState!.save();
-                            try {
-                              setState(() {
-                                Global.isLogin = true;
-                              });
-
-                              final credential = await FirebaseAuth.instance
-                                  .signInWithEmailAndPassword(
-                                email: Global.signInEmail,
-                                password: Global.signInPass,
-                              );
-
-                              Global.user = credential.user;
-                              print("Register User : ${Global.user}");
-
-                              // ignore: use_build_context_synchronously
-                              Navigator.pushReplacementNamed(
-                                context,
-                                'home',
-                              );
-
-                              setState(() {
-                                Global.isLogin = false;
-                              });
-
-                            } on FirebaseAuthException catch (e) {
-                              setState(() {
-                                Global.isLogin = false;
-                              });
-                              if (e.code == 'user-not-found') {
-                                print('No user found for that email.');
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content:
-                                        Text("No user found for that email."),
-                                  ),
-                                );
-                              } else if (e.code == 'wrong-password') {
-                                print('Wrong password provided.');
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text("Wrong password provided."),
-                                  ),
-                                );
-                              }
-                            }
+                            AuthHelper().authSignIn(context, setState);
                           }
                         },
-                        child: Text("Sign in", style: GoogleFonts.poppins(),),
+                        child: Text(
+                          "Sign in",
+                          style: GoogleFonts.poppins(),
+                        ),
                       ),
                 const SizedBox(
                   height: 100,

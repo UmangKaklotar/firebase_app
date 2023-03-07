@@ -1,5 +1,4 @@
 import 'package:firebase_app/auth.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -54,8 +53,10 @@ class _SignUpState extends State<SignUp> {
                   },
                   style: GoogleFonts.poppins(color: Colors.black),
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
                     errorStyle: GoogleFonts.poppins(),
                     hintText: "Email",
                   ),
@@ -82,8 +83,10 @@ class _SignUpState extends State<SignUp> {
                   controller: passController,
                   style: GoogleFonts.poppins(color: Colors.black),
                   decoration: InputDecoration(
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(30)),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 20),
                     errorStyle: GoogleFonts.poppins(),
                     hintText: "Password",
                   ),
@@ -103,55 +106,16 @@ class _SignUpState extends State<SignUp> {
                     : CupertinoButton.filled(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         borderRadius: BorderRadius.circular(30),
-                        onPressed: () async {
+                        onPressed: () {
                           if (signUpKey.currentState!.validate()) {
                             signUpKey.currentState!.save();
-                            try {
-                              setState(() {
-                                Global.isLogin = true;
-                              });
-
-                              final credential = await FirebaseAuth.instance
-                                  .createUserWithEmailAndPassword(
-                                email: Global.signUpEmail,
-                                password: Global.signUpPass,
-                              );
-
-                              Global.user = credential.user;
-                              print("Register User : ${Global.user}");
-
-                              // ignore: use_build_context_synchronously
-                              Navigator.pushReplacementNamed(
-                                context,
-                                'home',
-                              );
-
-                              setState(() {
-                                Global.isLogin = false;
-                              });
-
-                            } on FirebaseAuthException catch (e) {
-                              setState(() {
-                                Global.isLogin = false;
-                              });
-                              if (e.code == 'weak-password') {
-                                print('The password provided is too weak.');
-                              } else if (e.code == 'email-already-in-use') {
-                                print(
-                                    'The account already exists for that email.');
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text(
-                                        "The account already exists for that email."),
-                                  ),
-                                );
-                              }
-                            } catch (e) {
-                              print(e);
-                            }
+                            AuthHelper().authSignUp(context, setState);
                           }
                         },
-                        child: Text("Sign UP", style: GoogleFonts.poppins(),),
+                        child: Text(
+                          "Sign UP",
+                          style: GoogleFonts.poppins(),
+                        ),
                       ),
                 const SizedBox(
                   height: 50,
@@ -162,7 +126,10 @@ class _SignUpState extends State<SignUp> {
                   onPressed: () {
                     AuthHelper().authGoogle();
                   },
-                  child: Text("Google Login", style: GoogleFonts.poppins(),),
+                  child: Text(
+                    "Google Login",
+                    style: GoogleFonts.poppins(),
+                  ),
                 ),
                 const SizedBox(height: 40),
                 TextButton(
