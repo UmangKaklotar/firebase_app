@@ -1,26 +1,24 @@
-import 'package:firebase_app/auth.dart';
+import 'package:firebase_app/Helper/auth_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'global.dart';
+import '../Utils/global.dart';
 
-class SignUp extends StatefulWidget {
-  const SignUp({Key? key}) : super(key: key);
+class SignIn extends StatefulWidget {
+  const SignIn({Key? key}) : super(key: key);
 
   @override
-  State<SignUp> createState() => _SignUpState();
+  State<SignIn> createState() => _SignInState();
 }
 
-class _SignUpState extends State<SignUp> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passController = TextEditingController();
-  GlobalKey<FormState> signUpKey = GlobalKey<FormState>();
+class _SignInState extends State<SignIn> {
+  GlobalKey<FormState> signInKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
-        key: signUpKey,
+        key: signInKey,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -30,7 +28,7 @@ class _SignUpState extends State<SignUp> {
                   height: 150,
                 ),
                 const Text(
-                  "Sign UP",
+                  "Sign IN",
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.w600,
@@ -40,7 +38,7 @@ class _SignUpState extends State<SignUp> {
                   height: 50,
                 ),
                 TextFormField(
-                  controller: emailController,
+                  controller: Global.signInEmail,
                   validator: (val) {
                     if (val!.isEmpty) {
                       return "Please Enter the Email";
@@ -53,18 +51,13 @@ class _SignUpState extends State<SignUp> {
                   },
                   style: GoogleFonts.poppins(color: Colors.black),
                   decoration: InputDecoration(
+                    hintText: "Email",
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30)),
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                     errorStyle: GoogleFonts.poppins(),
-                    hintText: "Email",
                   ),
-                  onSaved: (val) {
-                    setState(() {
-                      Global.signUpEmail = val.toString();
-                    });
-                  },
                 ),
                 const SizedBox(
                   height: 20,
@@ -80,62 +73,42 @@ class _SignUpState extends State<SignUp> {
                       return "Please Enter a Valid password";
                     }
                   },
-                  controller: passController,
+                  controller: Global.signInPass,
                   style: GoogleFonts.poppins(color: Colors.black),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30)),
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
-                    errorStyle: GoogleFonts.poppins(),
                     hintText: "Password",
+                    errorStyle: GoogleFonts.poppins(),
                   ),
-                  onSaved: (val) {
-                    setState(() {
-                      Global.signUpPass = val.toString();
-                    });
-                  },
                 ),
                 const SizedBox(
                   height: 100,
                 ),
-                (Global.isLogin == true)
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
+                (Global.signIn == true)
+                    ? const Center(child: CircularProgressIndicator())
                     : CupertinoButton.filled(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         borderRadius: BorderRadius.circular(30),
                         onPressed: () {
-                          if (signUpKey.currentState!.validate()) {
-                            signUpKey.currentState!.save();
-                            AuthHelper().authSignUp(context, setState);
+                          if (signInKey.currentState!.validate()) {
+                            AuthHelper().authSignIn(context, setState);
                           }
                         },
                         child: Text(
-                          "Sign UP",
+                          "Sign in",
                           style: GoogleFonts.poppins(),
                         ),
                       ),
                 const SizedBox(
-                  height: 50,
+                  height: 100,
                 ),
-                CupertinoButton.filled(
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  borderRadius: BorderRadius.circular(30),
-                  onPressed: () {
-                    AuthHelper().authGoogle();
-                  },
-                  child: Text(
-                    "Google Login",
-                    style: GoogleFonts.poppins(),
-                  ),
-                ),
-                const SizedBox(height: 40),
                 TextButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () => Navigator.pushNamed(context, 'signUp'),
                   child: Text(
-                    "Already Exists An Account",
+                    "Sign Up Account",
                     style: GoogleFonts.poppins(
                       fontSize: 20,
                       decoration: TextDecoration.underline,
@@ -148,5 +121,14 @@ class _SignUpState extends State<SignUp> {
         ),
       ),
     );
+  }
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    Global.signInEmail.clear();
+    Global.signInPass.clear();
+    Global.signUpEmail.clear();
+    Global.signUpPass.clear();
   }
 }

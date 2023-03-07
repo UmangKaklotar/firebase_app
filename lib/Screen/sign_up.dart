@@ -1,26 +1,26 @@
-import 'package:firebase_app/auth.dart';
+import 'package:firebase_app/Helper/auth_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'global.dart';
+import '../Utils/global.dart';
 
-class SignIn extends StatefulWidget {
-  const SignIn({Key? key}) : super(key: key);
+
+
+class SignUp extends StatefulWidget {
+  const SignUp({Key? key}) : super(key: key);
 
   @override
-  State<SignIn> createState() => _SignInState();
+  State<SignUp> createState() => _SignUpState();
 }
 
-class _SignInState extends State<SignIn> {
-  GlobalKey<FormState> signInKey = GlobalKey<FormState>();
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passController = TextEditingController();
+class _SignUpState extends State<SignUp> {
+  GlobalKey<FormState> signUpKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Form(
-        key: signInKey,
+        key: signUpKey,
         child: Center(
           child: Padding(
             padding: const EdgeInsets.all(20),
@@ -30,7 +30,7 @@ class _SignInState extends State<SignIn> {
                   height: 150,
                 ),
                 const Text(
-                  "Sign IN",
+                  "Sign UP",
                   style: TextStyle(
                     fontSize: 30,
                     fontWeight: FontWeight.w600,
@@ -40,7 +40,7 @@ class _SignInState extends State<SignIn> {
                   height: 50,
                 ),
                 TextFormField(
-                  controller: emailController,
+                  controller: Global.signUpEmail,
                   validator: (val) {
                     if (val!.isEmpty) {
                       return "Please Enter the Email";
@@ -53,18 +53,13 @@ class _SignInState extends State<SignIn> {
                   },
                   style: GoogleFonts.poppins(color: Colors.black),
                   decoration: InputDecoration(
-                    hintText: "Email",
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30)),
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
                     errorStyle: GoogleFonts.poppins(),
+                    hintText: "Email",
                   ),
-                  onSaved: (val) {
-                    setState(() {
-                      Global.signInEmail = val.toString();
-                    });
-                  },
                 ),
                 const SizedBox(
                   height: 20,
@@ -80,48 +75,56 @@ class _SignInState extends State<SignIn> {
                       return "Please Enter a Valid password";
                     }
                   },
-                  controller: passController,
+                  controller: Global.signUpPass,
                   style: GoogleFonts.poppins(color: Colors.black),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30)),
                     contentPadding: const EdgeInsets.symmetric(
                         vertical: 10, horizontal: 20),
-                    hintText: "Password",
                     errorStyle: GoogleFonts.poppins(),
+                    hintText: "Password",
                   ),
-                  onSaved: (val) {
-                    setState(() {
-                      Global.signInPass = val.toString();
-                    });
-                  },
                 ),
                 const SizedBox(
                   height: 100,
                 ),
-                (Global.isLogin == true)
-                    ? const Center(child: CircularProgressIndicator())
+                (Global.signUp == true)
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
                     : CupertinoButton.filled(
                         padding: const EdgeInsets.symmetric(vertical: 10),
                         borderRadius: BorderRadius.circular(30),
                         onPressed: () {
-                          if (signInKey.currentState!.validate()) {
-                            signInKey.currentState!.save();
-                            AuthHelper().authSignIn(context, setState);
+                          if (signUpKey.currentState!.validate()) {
+                            AuthHelper().authSignUp(context, setState);
                           }
                         },
                         child: Text(
-                          "Sign in",
+                          "Sign UP",
                           style: GoogleFonts.poppins(),
                         ),
                       ),
                 const SizedBox(
-                  height: 100,
+                  height: 50,
                 ),
-                TextButton(
-                  onPressed: () => Navigator.pushNamed(context, 'signUp'),
+                CupertinoButton.filled(
+                  padding: const EdgeInsets.symmetric(vertical: 10),
+                  borderRadius: BorderRadius.circular(30),
+                  onPressed: () {
+                    AuthHelper().authGoogle();
+                  },
                   child: Text(
-                    "Sign Up Account",
+                    "Google Login",
+                    style: GoogleFonts.poppins(),
+                  ),
+                ),
+                const SizedBox(height: 40),
+                TextButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: Text(
+                    "Already Exists An Account",
                     style: GoogleFonts.poppins(
                       fontSize: 20,
                       decoration: TextDecoration.underline,
@@ -134,5 +137,13 @@ class _SignInState extends State<SignIn> {
         ),
       ),
     );
+  }
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    Global.signInEmail.clear();
+    Global.signInPass.clear();
+    Global.signUpEmail.clear();
+    Global.signUpPass.clear();
   }
 }

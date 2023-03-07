@@ -2,18 +2,18 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-import 'global.dart';
+import '../Utils/global.dart';
 
 class AuthHelper {
   authSignIn(context, setState) async {
     try {
       setState(() {
-        Global.isLogin = true;
+        Global.signIn = true;
       });
 
       final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
-        email: Global.signInEmail,
-        password: Global.signInPass,
+        email: Global.signInEmail.text,
+        password: Global.signInPass.text,
       );
 
       Global.user = credential.user;
@@ -26,11 +26,11 @@ class AuthHelper {
       );
 
       setState(() {
-        Global.isLogin = false;
+        Global.signIn = false;
       });
     } on FirebaseAuthException catch (e) {
       setState(() {
-        Global.isLogin = false;
+        Global.signIn = false;
       });
 
       if (e.code == 'user-not-found') {
@@ -54,13 +54,13 @@ class AuthHelper {
   authSignUp(context, setState) async {
     try {
       setState(() {
-        Global.isLogin = true;
+        Global.signUp = true;
       });
 
       final credential =
           await FirebaseAuth.instance.createUserWithEmailAndPassword(
-        email: Global.signUpEmail,
-        password: Global.signUpPass,
+        email: Global.signUpEmail.text,
+        password: Global.signUpPass.text,
       );
 
       Global.user = credential.user;
@@ -73,11 +73,11 @@ class AuthHelper {
       );
 
       setState(() {
-        Global.isLogin = false;
+        Global.signUp = false;
       });
     } on FirebaseAuthException catch (e) {
       setState(() {
-        Global.isLogin = false;
+        Global.signUp = false;
       });
       if (e.code == 'weak-password') {
         print('The password provided is too weak.');
