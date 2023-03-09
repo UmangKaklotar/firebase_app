@@ -98,7 +98,7 @@ class _SignUpState extends State<SignUp> {
                         borderRadius: BorderRadius.circular(30),
                         onPressed: () {
                           if (signUpKey.currentState!.validate()) {
-                            AuthHelper().authSignUp(context, setState);
+                            AuthHelper.instance.authSignUp(context, setState);
                           }
                         },
                         child: Text(
@@ -113,7 +113,7 @@ class _SignUpState extends State<SignUp> {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   borderRadius: BorderRadius.circular(30),
                   onPressed: () {
-                    AuthHelper().authGoogle();
+                    AuthHelper.instance.authGoogle();
                   },
                   child: Text(
                     "Google Login",
@@ -122,7 +122,11 @@ class _SignUpState extends State<SignUp> {
                 ),
                 const SizedBox(height: 40),
                 TextButton(
-                  onPressed: () => Navigator.pop(context),
+                  onPressed: () {
+                    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+                    Global.signUpEmail.clear();
+                    Global.signUpPass.clear();
+                  },
                   child: Text(
                     "Already Exists An Account",
                     style: GoogleFonts.poppins(
@@ -137,13 +141,5 @@ class _SignUpState extends State<SignUp> {
         ),
       ),
     );
-  }
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    Global.signInEmail.clear();
-    Global.signInPass.clear();
-    Global.signUpEmail.clear();
-    Global.signUpPass.clear();
   }
 }

@@ -1,10 +1,10 @@
-class Users{
+class UserData{
   String? name;
   int? age;
 
-  Users({required this.name, required this.age});
+  UserData({required this.name, required this.age});
 
-  Users.fromMap(Map<String, dynamic> map) {
+  UserData.fromMap(Map<String, dynamic> map) {
     name = map[name];
     age = map[age];
   }

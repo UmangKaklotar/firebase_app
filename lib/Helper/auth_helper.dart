@@ -5,6 +5,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../Utils/global.dart';
 
 class AuthHelper {
+  static AuthHelper instance = AuthHelper();
   authSignIn(context, setState) async {
     try {
       setState(() {

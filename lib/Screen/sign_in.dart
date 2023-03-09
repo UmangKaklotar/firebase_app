@@ -94,7 +94,7 @@ class _SignInState extends State<SignIn> {
                         borderRadius: BorderRadius.circular(30),
                         onPressed: () {
                           if (signInKey.currentState!.validate()) {
-                            AuthHelper().authSignIn(context, setState);
+                            AuthHelper.instance.authSignIn(context, setState);
                           }
                         },
                         child: Text(
@@ -106,7 +106,11 @@ class _SignInState extends State<SignIn> {
                   height: 100,
                 ),
                 TextButton(
-                  onPressed: () => Navigator.pushNamed(context, 'signUp'),
+                  onPressed: () {
+                    Navigator.pushNamed(context, 'signUp');
+                    Global.signInEmail.clear();
+                    Global.signInPass.clear();
+                  },
                   child: Text(
                     "Sign Up Account",
                     style: GoogleFonts.poppins(
@@ -121,14 +125,5 @@ class _SignInState extends State<SignIn> {
         ),
       ),
     );
-  }
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    Global.signInEmail.clear();
-    Global.signInPass.clear();
-    Global.signUpEmail.clear();
-    Global.signUpPass.clear();
   }
 }
