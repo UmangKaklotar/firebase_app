@@ -12,17 +12,21 @@ class CollectionHelper {
         .catchError((error) => print("Failed to add user: $error"));
   }
 
-  updateData() {
+  updateData({required int index, required UserData userData}) async {
+    var docSnap = await users.get();
+    var doc_id = docSnap.docs;
     return users
-        .doc('r6Ax5LypEKFkq4Mtes0U')
-        .update(UserData(name: "Shreya", age: 21).toMap())
+        .doc(doc_id[index].id)
+        .update(userData.toMap())
         .then((value) => print("User Updated.."))
         .catchError((error) => print("Failed to update user: $error"));
   }
 
-  deleteData() {
+  deleteData({required int index}) async {
+    var docSnap = await users.get();
+    var doc_id = docSnap.docs;
     return users
-        .doc('E8usoulZ54uTc2jbw1sw')
+        .doc(doc_id[index].id)
         .delete()
         .then((value) => print("User Deleted.."))
         .catchError((error) => print("Failed to delete user: $error"));

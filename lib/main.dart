@@ -1,3 +1,4 @@
+import 'package:firebase_app/Screen/edit_profile.dart';
 import 'package:firebase_app/Screen/home_screen.dart';
 import 'package:firebase_app/Screen/sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -24,6 +25,7 @@ Future<void> main() async {
         'signIn': (context) => const SignIn(),
         'signUp': (context) => const SignUp(),
         'home': (context) => const HomeScreen(),
+        'edit': (context) => const EditProfile(),
       },
     ),
   );

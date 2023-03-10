@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../Utils/global.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -13,8 +15,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  TextEditingController name = TextEditingController();
-  TextEditingController age = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -23,20 +23,6 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text("FireBase APP"),
         actions: [
-          IconButton(
-            splashRadius: 25,
-            icon: const Icon(Icons.update),
-            onPressed: () {
-              CollectionHelper.instance.updateData();
-            },
-          ),
-          IconButton(
-            splashRadius: 25,
-            icon: const Icon(Icons.delete),
-            onPressed: () {
-              CollectionHelper.instance.deleteData();
-            },
-          ),
           IconButton(
             splashRadius: 25,
             icon: const Icon(Icons.logout),
@@ -71,10 +57,11 @@ class _HomeScreenState extends State<HomeScreen> {
       //   },
       // ),
       body: ListView(
+        physics: const BouncingScrollPhysics(),
         padding: const EdgeInsets.all(20),
         children: [
           TextFormField(
-            controller: name,
+            controller: Global.name,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               hintText: "Enter The Name",
@@ -84,7 +71,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           const SizedBox(height: 20),
           TextFormField(
-            controller: age,
+            controller: Global.age,
             decoration: const InputDecoration(
               border: OutlineInputBorder(),
               hintText: "Enter The Age",
@@ -96,10 +83,10 @@ class _HomeScreenState extends State<HomeScreen> {
           CupertinoButton.filled(
             child: const Text("Insert Data"),
             onPressed: (){
-              var userData = UserData(name: name.text, age: int.parse(age.text));
+              var userData = UserData(name: Global.name.text, age: int.parse(Global.age.text));
               CollectionHelper.instance.insertData(userData);
-              name.clear();
-              age.clear();
+              Global.name.clear();
+              Global.age.clear();
             },
           ),
           const SizedBox(height: 20),
@@ -117,10 +104,19 @@ class _HomeScreenState extends State<HomeScreen> {
                     physics: const BouncingScrollPhysics(),
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
-                      List data = snapshot.data!.docs;
+                      Global.userData = snapshot.data!.docs;
                       return ListTile(
-                        title: Text("${data[index]['name']}"),
-                        subtitle: Text("${data[index]['age']}"),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 0),
+                        onTap: () => Navigator.pushNamed(context, 'edit', arguments: index),
+                        title: Text("${Global.userData[index]['name']}"),
+                        subtitle: Text("${Global.userData[index]['age']}"),
+                        trailing: IconButton(
+                          splashRadius: 25,
+                          icon: const Icon(Icons.delete),
+                          onPressed: () {
+                            CollectionHelper.instance.deleteData(index: index);
+                          },
+                        ),
                       );
                     },
                   );
