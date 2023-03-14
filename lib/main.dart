@@ -4,9 +4,18 @@ import 'package:firebase_app/Screen/sign_in.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 import 'Screen/sign_up.dart';
+
+AndroidNotificationChannel channel = const AndroidNotificationChannel(
+    "My Channel", "Notification Channel",
+    description: "This Channel is used for impotant Notification",
+    importance: Importance.max);
+//
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+    FlutterLocalNotificationsPlugin();
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

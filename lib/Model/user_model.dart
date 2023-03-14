@@ -1,4 +1,4 @@
-class UserData{
+class UserData {
   String? name;
   int? age;
 
@@ -10,7 +10,7 @@ class UserData{
   }
 
   Map<String, dynamic> toMap() => {
-    'name': name,
-    'age': age,
-  };
+        'name': name,
+        'age': age,
+      };
 }

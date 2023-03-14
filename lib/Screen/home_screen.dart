@@ -4,8 +4,10 @@ import 'package:firebase_app/Model/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 import '../Utils/global.dart';
+import '../main.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -15,6 +17,26 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  int i = 0;
+  void showNotification() {
+    setState(() {
+      i++;
+    });
+    flutterLocalNotificationsPlugin.show(
+      0,
+      "My Notification $i",
+      "Hello Friend! How Are You doing today?",
+      NotificationDetails(
+        android: AndroidNotificationDetails(
+          channel.id,
+          channel.name,
+          importance: Importance.high,
+          playSound: true,
+          icon: '@mipmap/ic_launcher',
+        ),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,6 +45,10 @@ class _HomeScreenState extends State<HomeScreen> {
       appBar: AppBar(
         title: const Text("FireBase APP"),
         actions: [
+          IconButton(
+            icon: const Icon(Icons.notifications_active_rounded),
+            onPressed: () => showNotification(),
+          ),
           IconButton(
             splashRadius: 25,
             icon: const Icon(Icons.logout),
@@ -82,8 +108,9 @@ class _HomeScreenState extends State<HomeScreen> {
           const SizedBox(height: 20),
           CupertinoButton.filled(
             child: const Text("Insert Data"),
-            onPressed: (){
-              var userData = UserData(name: Global.name.text, age: int.parse(Global.age.text));
+            onPressed: () {
+              var userData = UserData(
+                  name: Global.name.text, age: int.parse(Global.age.text));
               CollectionHelper.instance.insertData(userData);
               Global.name.clear();
               Global.age.clear();
@@ -93,12 +120,16 @@ class _HomeScreenState extends State<HomeScreen> {
           SizedBox(
             height: 500,
             child: StreamBuilder(
-              stream: FirebaseFirestore.instance.collection('users').snapshots(),
+              stream:
+                  FirebaseFirestore.instance.collection('users').snapshots(),
               builder: (context, snapshot) {
-                if(snapshot.hasError) {
+                if (snapshot.hasError) {
                   return const Text("Something went Wrong!");
-                } else if(snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator(),);
+                } else if (snapshot.connectionState ==
+                    ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
                 } else {
                   return ListView.builder(
                     physics: const BouncingScrollPhysics(),
@@ -106,8 +137,10 @@ class _HomeScreenState extends State<HomeScreen> {
                     itemBuilder: (context, index) {
                       Global.userData = snapshot.data!.docs;
                       return ListTile(
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 0),
-                        onTap: () => Navigator.pushNamed(context, 'edit', arguments: index),
+                        contentPadding:
+                            const EdgeInsets.symmetric(horizontal: 0),
+                        onTap: () => Navigator.pushNamed(context, 'edit',
+                            arguments: index),
                         title: Text("${Global.userData[index]['name']}"),
                         subtitle: Text("${Global.userData[index]['age']}"),
                         trailing: IconButton(
