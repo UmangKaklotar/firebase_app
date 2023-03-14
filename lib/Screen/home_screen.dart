@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app/Helper/collection_helper.dart';
 import 'package:firebase_app/Model/user_model.dart';
@@ -5,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:http/http.dart';
 
 import '../Utils/global.dart';
 import '../main.dart';
@@ -18,10 +21,22 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int i = 0;
-  void showNotification() {
+  showNotification() async {
     setState(() {
       i++;
     });
+
+    final Response response = await get(Uri.parse('https://images.unsplash.com/photo-1678791589088-f26ed2590a21?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1476&q=80'));
+
+    BigPictureStyleInformation bigPictureStyleInformation = BigPictureStyleInformation(
+      ByteArrayAndroidBitmap.fromBase64String(
+        base64Encode(response.bodyBytes)
+      ),
+      largeIcon: ByteArrayAndroidBitmap.fromBase64String(
+        base64Encode(response.bodyBytes),
+      )
+    );
+
     flutterLocalNotificationsPlugin.show(
       0,
       "My Notification $i",
@@ -33,6 +48,7 @@ class _HomeScreenState extends State<HomeScreen> {
           importance: Importance.high,
           playSound: true,
           icon: '@mipmap/ic_launcher',
+          styleInformation: bigPictureStyleInformation,
         ),
       ),
     );
