@@ -16,8 +16,10 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     int index = ModalRoute.of(context)!.settings.arguments as int;
-    Global.name.text = Global.userData[index]['name'];
-    Global.age.text = Global.userData[index]['age'].toString();
+    WidgetsBinding.instance.addPostFrameCallback((_){
+      Global.name.text = Global.userData[index]['name'];
+      Global.age.text = Global.userData[index]['age'].toString();
+    });
     return Scaffold(
       appBar: AppBar(
         title: const Text("Edit Profile"),

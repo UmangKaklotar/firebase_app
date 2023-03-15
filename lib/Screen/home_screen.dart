@@ -4,10 +4,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_app/Helper/collection_helper.dart';
 import 'package:firebase_app/Model/user_model.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:http/http.dart';
+import 'package:timezone/data/latest.dart' as tz;
+import 'package:timezone/timezone.dart' as tz;
 
 import '../Utils/global.dart';
 import '../main.dart';
@@ -21,6 +24,14 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int i = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    tz.initializeTimeZones();
+    getFcmToken();
+  }
+
   showNotification() async {
     setState(() {
       i++;
@@ -37,10 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
       )
     );
 
-    flutterLocalNotificationsPlugin.show(
+    flutterLocalNotificationsPlugin.zonedSchedule(
       0,
       "My Notification $i",
       "Hello Friend! How Are You doing today?",
+      tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
       NotificationDetails(
         android: AndroidNotificationDetails(
           channel.id,
@@ -50,8 +62,36 @@ class _HomeScreenState extends State<HomeScreen> {
           icon: '@mipmap/ic_launcher',
           styleInformation: bigPictureStyleInformation,
         ),
-      ),
+      ), 
+      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime, 
+      androidAllowWhileIdle: true,
     );
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification notification = message.notification!;
+      AndroidNotification? android = notification.android;
+      if(android != null) {
+        flutterLocalNotificationsPlugin.show(
+          notification.hashCode,
+          "${notification.title} $i",
+          notification.body,
+          NotificationDetails(
+            android: AndroidNotificationDetails(
+              channel.id,
+              channel.name,
+              color: Colors.blue,
+              playSound: true,
+              icon: '@mipmap/ic_launcher',
+            ),
+          ),
+        );
+      }
+    });
+  }
+
+  getFcmToken() async {
+    final fcmToken = await FirebaseMessaging.instance.getToken();
+    print("Token : $fcmToken");
   }
 
   @override
