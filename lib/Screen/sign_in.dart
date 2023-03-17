@@ -74,6 +74,8 @@ class _SignInState extends State<SignIn> {
                     }
                   },
                   controller: Global.signInPass,
+                  obscureText: true,
+                  obscuringCharacter: "*",
                   style: GoogleFonts.poppins(color: Colors.black),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(

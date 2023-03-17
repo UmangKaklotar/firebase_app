@@ -27,7 +27,7 @@ class _SignUpState extends State<SignUp> {
             child: ListView(
               children: [
                 const SizedBox(
-                  height: 150,
+                  height: 130,
                 ),
                 const Text(
                   "Sign UP",
@@ -76,6 +76,8 @@ class _SignUpState extends State<SignUp> {
                     }
                   },
                   controller: Global.signUpPass,
+                  obscureText: true,
+                  obscuringCharacter: "*",
                   style: GoogleFonts.poppins(color: Colors.black),
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -113,7 +115,7 @@ class _SignUpState extends State<SignUp> {
                   padding: const EdgeInsets.symmetric(vertical: 10),
                   borderRadius: BorderRadius.circular(30),
                   onPressed: () {
-                    AuthHelper.instance.authGoogle();
+                    AuthHelper.instance.authGoogle(context);
                   },
                   child: Text(
                     "Google Login",
@@ -123,7 +125,7 @@ class _SignUpState extends State<SignUp> {
                 const SizedBox(height: 40),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+                    Navigator.pushNamedAndRemoveUntil(context, 'state', (route) => false);
                     Global.signUpEmail.clear();
                     Global.signUpPass.clear();
                   },

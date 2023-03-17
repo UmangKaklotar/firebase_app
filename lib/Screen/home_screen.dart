@@ -48,11 +48,11 @@ class _HomeScreenState extends State<HomeScreen> {
       )
     );
 
-    flutterLocalNotificationsPlugin.zonedSchedule(
+    flutterLocalNotificationsPlugin.show(
       0,
       "My Notification $i",
       "Hello Friend! How Are You doing today?",
-      tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
+      // tz.TZDateTime.now(tz.local).add(const Duration(seconds: 5)),
       NotificationDetails(
         android: AndroidNotificationDetails(
           channel.id,
@@ -63,8 +63,8 @@ class _HomeScreenState extends State<HomeScreen> {
           styleInformation: bigPictureStyleInformation,
         ),
       ), 
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime, 
-      androidAllowWhileIdle: true,
+      // uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      // androidAllowWhileIdle: true,
     );
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
@@ -112,7 +112,7 @@ class _HomeScreenState extends State<HomeScreen> {
               await FirebaseAuth.instance.signOut();
 
               // ignore: use_build_context_synchronously
-              Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+              Navigator.pushNamedAndRemoveUntil(context, 'state', (route) => false);
             },
           ),
         ],

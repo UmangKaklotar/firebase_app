@@ -1,7 +1,8 @@
+import 'package:firebase_app/Screen/auth_state.dart';
 import 'package:firebase_app/Screen/edit_profile.dart';
 import 'package:firebase_app/Screen/home_screen.dart';
 import 'package:firebase_app/Screen/sign_in.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_app/Screen/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -13,7 +14,7 @@ AndroidNotificationChannel channel = const AndroidNotificationChannel(
     "My Channel", "Notification Channel",
     description: "This Channel is used for impotant Notification",
     importance: Importance.max);
-//
+
 final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
     FlutterLocalNotificationsPlugin();
 
@@ -29,8 +30,10 @@ Future<void> main() async {
         ),
       ),
       debugShowCheckedModeBanner: false,
+      initialRoute: 'splash',
       routes: {
-        '/': (context) => const MyApp(),
+        'splash': (context) => const SplashScreen(),
+        'state': (context) => const AuthState(),
         'signIn': (context) => const SignIn(),
         'signUp': (context) => const SignUp(),
         'home': (context) => const HomeScreen(),
@@ -38,29 +41,4 @@ Future<void> main() async {
       },
     ),
   );
-}
-
-class MyApp extends StatefulWidget {
-  const MyApp({Key? key}) : super(key: key);
-
-  @override
-  State<MyApp> createState() => _MyAppState();
-}
-
-class _MyAppState extends State<MyApp> {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: StreamBuilder<User?>(
-        stream: FirebaseAuth.instance.authStateChanges(),
-        builder: (context, snapshot) {
-          if (snapshot.hasData) {
-            return const HomeScreen();
-          } else {
-            return const SignIn();
-          }
-        },
-      ),
-    );
-  }
 }
