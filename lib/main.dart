@@ -24,6 +24,9 @@ Future<void> main() async {
   runApp(
     MaterialApp(
       theme: ThemeData(
+        appBarTheme: AppBarTheme(
+          titleTextStyle: GoogleFonts.poppins(color: Colors.white, fontSize: 20),
+        ),
         textTheme: TextTheme(
           bodyText2: GoogleFonts.poppins(color: Colors.black),
           bodyText1: GoogleFonts.poppins(color: Colors.black),
