@@ -22,7 +22,7 @@ class _SplashScreenState extends State<SplashScreen> {
       body: Container(
         color: const Color(0xffEAEEEF),
         alignment: Alignment.center,
-        child: Image.network('https://i.pinimg.com/originals/74/50/14/74501403f53a5ed702543483addd5e21.gif',
+        child: Image.asset('assets/image/firebase_logo.gif',
           width: 300,
         ),
       ),

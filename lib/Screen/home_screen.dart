@@ -8,6 +8,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:http/http.dart';
 import 'package:timezone/data/latest.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
@@ -94,12 +95,13 @@ class _HomeScreenState extends State<HomeScreen> {
     print("Token : $fcmToken");
   }
 
+  GlobalKey<FormState> insertData = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     // String email = ModalRoute.of(context)!.settings.arguments as String;
     return Scaffold(
       appBar: AppBar(
-        title: const Text("FireBase APP"),
+        title: const Text("FireBase APP",),
         actions: [
           IconButton(
             icon: const Icon(Icons.notifications_active_rounded),
@@ -138,82 +140,117 @@ class _HomeScreenState extends State<HomeScreen> {
       //     }
       //   },
       // ),
-      body: ListView(
-        physics: const BouncingScrollPhysics(),
-        padding: const EdgeInsets.all(20),
-        children: [
-          TextFormField(
-            controller: Global.name,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: "Enter The Name",
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            ),
-          ),
-          const SizedBox(height: 20),
-          TextFormField(
-            controller: Global.age,
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
-              hintText: "Enter The Age",
-              contentPadding:
-                  EdgeInsets.symmetric(vertical: 10, horizontal: 15),
-            ),
-          ),
-          const SizedBox(height: 20),
-          CupertinoButton.filled(
-            child: const Text("Insert Data"),
-            onPressed: () {
-              var userData = UserData(
-                  name: Global.name.text, age: int.parse(Global.age.text));
-              CollectionHelper.instance.insertData(userData);
-              Global.name.clear();
-              Global.age.clear();
-            },
-          ),
-          const SizedBox(height: 20),
-          SizedBox(
-            height: 500,
-            child: StreamBuilder(
-              stream:
-                  FirebaseFirestore.instance.collection('users').snapshots(),
-              builder: (context, snapshot) {
-                if (snapshot.hasError) {
-                  return const Text("Something went Wrong!");
-                } else if (snapshot.connectionState ==
-                    ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                } else {
-                  return ListView.builder(
-                    physics: const BouncingScrollPhysics(),
-                    itemCount: snapshot.data!.docs.length,
-                    itemBuilder: (context, index) {
-                      Global.userData = snapshot.data!.docs;
-                      return ListTile(
-                        contentPadding:
-                            const EdgeInsets.symmetric(horizontal: 0),
-                        onTap: () => Navigator.pushNamed(context, 'edit',
-                            arguments: index),
-                        title: Text("${Global.userData[index]['name']}"),
-                        subtitle: Text("${Global.userData[index]['age']}"),
-                        trailing: IconButton(
-                          splashRadius: 25,
-                          icon: const Icon(Icons.delete),
-                          onPressed: () {
-                            CollectionHelper.instance.deleteData(index: index);
-                          },
-                        ),
-                      );
-                    },
-                  );
+      body: Form(
+        key: insertData,
+        child: ListView(
+          physics: const BouncingScrollPhysics(),
+          padding: const EdgeInsets.all(20),
+          children: [
+            TextFormField(
+              validator: (val){
+                if(val!.isEmpty) {
+                  return "Please Enter Name";
                 }
               },
+              controller: Global.name,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30)),
+                contentPadding: const EdgeInsets.symmetric(
+                    vertical: 10, horizontal: 20),
+                hintText: "Enter The Name",
+                hintStyle: GoogleFonts.poppins(color: Colors.grey),
+                errorStyle: GoogleFonts.poppins(),
+              ),
             ),
-          ),
-        ],
+            const SizedBox(height: 20),
+            TextFormField(
+              validator: (val){
+                if(val!.isEmpty) {
+                  return "Please Enter Age";
+                }
+              },
+              controller: Global.age,
+              decoration: InputDecoration(
+                border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(30)),
+                contentPadding: const EdgeInsets.symmetric(
+                    vertical: 10, horizontal: 20),
+                hintText: "Enter The Age",
+                hintStyle: GoogleFonts.poppins(color: Colors.grey),
+                errorStyle: GoogleFonts.poppins(),
+              ),
+            ),
+            const SizedBox(height: 20),
+            CupertinoButton.filled(
+              padding: const EdgeInsets.symmetric(vertical: 10),
+              borderRadius: BorderRadius.circular(30),
+              onPressed: () {
+                if(insertData.currentState!.validate()) {
+                  var userData = UserData(
+                      name: Global.name.text, age: int.parse(Global.age.text));
+                  CollectionHelper.instance.insertData(userData);
+                  Global.name.clear();
+                  Global.age.clear();
+                }
+              },
+              child: Text("Insert Data", style: GoogleFonts.poppins(color: Colors.white),),
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              height: 430,
+              child: StreamBuilder(
+                stream:
+                    FirebaseFirestore.instance.collection('users').snapshots(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return const Text("Something went Wrong!");
+                  } else if (snapshot.connectionState ==
+                      ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  } else {
+                    return ListView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        Global.userData = snapshot.data!.docs;
+                        return ListTile(
+                          contentPadding:
+                              const EdgeInsets.symmetric(horizontal: 0),
+                          onTap: () => Navigator.pushNamed(context, 'edit',
+                              arguments: index),
+                          title: Text("${Global.userData[index]['name']}", style: GoogleFonts.poppins(),),
+                          subtitle: Text("${Global.userData[index]['age']}", style: GoogleFonts.poppins(),),
+                          trailing: SizedBox(
+                            width: 100,
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  splashRadius: 25,
+                                  icon: const Icon(Icons.edit_note_rounded, color: Colors.green,),
+                                  onPressed: () => Navigator.pushNamed(context, 'edit', arguments: index),
+                                ),
+                                IconButton(
+                                  splashRadius: 25,
+                                  icon: const Icon(Icons.delete, color: Colors.red,),
+                                  onPressed: () {
+                                    CollectionHelper.instance.deleteData(index: index);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
