@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Model/note_model.dart';
 
 class CollectionHelper {
-
   static CollectionHelper instance = CollectionHelper();
 
   CollectionReference notes = FirebaseFirestore.instance.collection('notes');
@@ -15,7 +14,7 @@ class CollectionHelper {
         .catchError((error) => print("Error : $error"));
   }
 
-  deleteNotes(int index) async {
+  deleteNote(int index) async {
     var docSnap = await notes.get();
     var doc_id = docSnap.docs;
     return notes
@@ -24,6 +23,4 @@ class CollectionHelper {
         .then((e) => print("Notes Deleted.."))
         .catchError((error) => print("Error : $error"));
   }
-
-
 }

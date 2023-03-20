@@ -1,3 +1,4 @@
+import 'package:firebase_app/Screen/notes.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -13,7 +14,8 @@ Future<void> main() async {
     MaterialApp(
       theme: ThemeData(
         appBarTheme: AppBarTheme(
-          titleTextStyle: GoogleFonts.poppins(color: MyColor.black),
+          titleTextStyle:
+              GoogleFonts.poppins(color: MyColor.white, fontSize: 20),
         ),
         textTheme: TextTheme(
           bodyText2: GoogleFonts.poppins(color: MyColor.black),
@@ -24,6 +26,7 @@ Future<void> main() async {
       routes: {
         'splash': (context) => const SplashScreen(),
         'home': (context) => const HomeScreen(),
+        'note': (context) => const NotesDetails(),
       },
     ),
   );

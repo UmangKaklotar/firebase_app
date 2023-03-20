@@ -18,20 +18,26 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: MyColor.white,
+        backgroundColor: MyColor.themeColor,
         elevation: 0,
-        title: const Text("Notes", style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),),
+        title: const Text(
+          "Notes",
+        ),
       ),
       body: StreamBuilder(
         stream: FirebaseFirestore.instance.collection('notes').snapshots(),
         builder: (context, snapshot) {
-          if(snapshot.hasError) {
-            return const Center(child: Text("Something went Wrong"),);
-          } else if(snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(child: CircularProgressIndicator(),);
+          if (snapshot.hasError) {
+            return const Center(
+              child: Text("Something went Wrong"),
+            );
+          } else if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
           } else {
             return ListView.builder(
-              padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+              padding: const EdgeInsets.all(15),
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
                 Global.notes = snapshot.data!.docs;
@@ -42,15 +48,20 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   child: Container(
                     decoration: BoxDecoration(
-                      color: MyColor.white,
-                      borderRadius: BorderRadius.circular(20)
-                    ),
+                        color: MyColor.white,
+                        borderRadius: BorderRadius.circular(20)),
                     child: ListTile(
+                      onTap: () => Navigator.pushNamed(context, 'note',
+                          arguments: index),
                       title: Text("${Global.notes[index]['title']}"),
                       subtitle: Text("${Global.notes[index]['des']}"),
                       trailing: IconButton(
-                        icon: Icon(CupertinoIcons.delete, color: MyColor.red,),
-                        onPressed: () => CollectionHelper.instance.deleteNotes(index),
+                        icon: Icon(
+                          CupertinoIcons.delete,
+                          color: MyColor.red,
+                        ),
+                        onPressed: () =>
+                            CollectionHelper.instance.deleteNote(index),
                       ),
                     ),
                   ),
@@ -61,9 +72,9 @@ class _HomeScreenState extends State<HomeScreen> {
         },
       ),
       floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xffE95343),
+        backgroundColor: MyColor.themeColor,
         child: const Icon(Icons.note_add_rounded),
-        onPressed: (){},
+        onPressed: () => Navigator.pushNamed(context, 'note'),
       ),
       backgroundColor: MyColor.white,
     );
