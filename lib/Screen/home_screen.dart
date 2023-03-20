@@ -3,6 +3,7 @@ import 'package:firebase_app/Helper/collection_helper.dart';
 import 'package:firebase_app/Utils/global.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 import '../Utils/color.dart';
 
@@ -69,7 +70,13 @@ class _HomeScreenState extends State<HomeScreen> {
                           CupertinoIcons.delete,
                           color: MyColor.red,
                         ),
-                        onPressed: () => CollectionHelper.instance.deleteNote(index),
+                        onPressed: () => setState(() {
+                          CollectionHelper.instance.deleteNote(index);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("Notes Deleted", style: GoogleFonts.poppins(),),
+                            backgroundColor: MyColor.themeColor,
+                          ));
+                        }),
                       ),
                     ),
                   ),
