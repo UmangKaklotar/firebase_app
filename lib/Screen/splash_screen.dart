@@ -20,9 +20,8 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        color: const Color(0xffF3F3F3),
         alignment: Alignment.center,
-        child: Image.asset('assets/image/notes_logo.gif',
+        child: Image.asset('assets/image/book.png',
           width: 250,
         ),
       ),

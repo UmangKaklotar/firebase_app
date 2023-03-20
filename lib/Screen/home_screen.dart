@@ -22,11 +22,11 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: MyColor.themeColor,
         elevation: 0,
         title: const Text(
-          "Notes",
+          "Author App",
         ),
       ),
       body: StreamBuilder(
-        stream: FirebaseFirestore.instance.collection('notes').snapshots(),
+        stream: FirebaseFirestore.instance.collection('authors').snapshots(),
         builder: (context, snapshot) {
           if (snapshot.hasError) {
             return const Center(
@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
               padding: const EdgeInsets.all(15),
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
-                Global.notes = snapshot.data!.docs;
+                Global.authors = snapshot.data!.docs;
                 return Card(
                   elevation: 3,
                   shape: RoundedRectangleBorder(
@@ -54,14 +54,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         borderRadius: BorderRadius.circular(20)),
                     child: ListTile(
                       shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                       onTap: () => setState(() {
-                        Global.isNotes = true;
+                        Global.isAuthor = true;
                         Navigator.pushNamed(context, 'note', arguments: index);
                       }),
-                      title: Text("${Global.notes[index]['title']}"),
-                      subtitle: Text("${Global.notes[index]['des']}",
+                      title: Text("${Global.authors[index]['book']}"),
+                      subtitle: Text("${Global.authors[index]['name']}",
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                       ),
@@ -73,7 +73,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         onPressed: () => setState(() {
                           CollectionHelper.instance.deleteNote(index);
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("Notes Deleted", style: GoogleFonts.poppins(),),
+                            content: Text("Author Deleted...", style: GoogleFonts.poppins(),),
                             backgroundColor: MyColor.themeColor,
                           ));
                         }),
@@ -90,7 +90,7 @@ class _HomeScreenState extends State<HomeScreen> {
         backgroundColor: MyColor.themeColor,
         child: const Icon(Icons.note_add_rounded),
         onPressed: () => setState(() {
-          Global.isNotes = false;
+          Global.isAuthor = false;
           Navigator.pushNamed(context, 'note');
         }),
       ),

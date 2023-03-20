@@ -1,33 +1,33 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import '../Model/note_model.dart';
+import '../Model/author_model.dart';
 
 class CollectionHelper {
   static CollectionHelper instance = CollectionHelper();
 
-  CollectionReference notes = FirebaseFirestore.instance.collection('notes');
+  CollectionReference authors = FirebaseFirestore.instance.collection('authors');
 
-  insertNote(Notes note) {
-    return notes
-        .add(note.toMap())
+  insertNote(Author author) {
+    return authors
+        .add(author.toMap())
         .then((e) => print("Notes Added..."))
         .catchError((error) => print("Error : $error"));
   }
 
-  updateNote(int index, Notes note) async {
-    var docSnap = await notes.get();
+  updateNote(int index, Author author) async {
+    var docSnap = await authors.get();
     var doc_id = docSnap.docs;
-    return notes
+    return authors
         .doc(doc_id[index].id)
-        .update(note.toMap())
+        .update(author.toMap())
         .then((value) => print("Notes Updated..."))
         .catchError((error) => print("Error : $error"));
   }
 
   deleteNote(int index) async {
-    var docSnap = await notes.get();
+    var docSnap = await authors.get();
     var doc_id = docSnap.docs;
-    return notes
+    return authors
         .doc(doc_id[index].id)
         .delete()
         .then((e) => print("Notes Deleted..."))

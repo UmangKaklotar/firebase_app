@@ -1,4 +1,4 @@
-import 'package:firebase_app/Model/note_model.dart';
+import 'package:firebase_app/Model/author_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,33 +7,33 @@ import '../Helper/collection_helper.dart';
 import '../Utils/color.dart';
 import '../Utils/global.dart';
 
-class NotesDetails extends StatefulWidget {
-  const NotesDetails({Key? key}) : super(key: key);
+class AuthorDetails extends StatefulWidget {
+  const AuthorDetails({Key? key}) : super(key: key);
 
   @override
-  State<NotesDetails> createState() => _NotesDetailsState();
+  State<AuthorDetails> createState() => _AuthorDetailsState();
 }
 
-class _NotesDetailsState extends State<NotesDetails> {
+class _AuthorDetailsState extends State<AuthorDetails> {
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Global.title.clear();
-    Global.des.clear();
+    Global.name.clear();
+    Global.book.clear();
   }
 
   @override
   Widget build(BuildContext context) {
     int? index = ModalRoute.of(context)?.settings.arguments as int?;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Global.title.text = Global.notes[index!]['title'];
-      Global.des.text = Global.notes[index]['des'];
+      Global.name.text = Global.authors[index!]['name'];
+      Global.book.text = Global.authors[index]['book'];
     });
     return Scaffold(
       resizeToAvoidBottomInset: true,
       body: Form(
-        key: Global.notesKey,
+        key: Global.authorKey,
         child: SafeArea(
           child: Padding(
             padding: const EdgeInsets.all(15),
@@ -43,7 +43,7 @@ class _NotesDetailsState extends State<NotesDetails> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "Title",
+                    "Book Name",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -59,14 +59,15 @@ class _NotesDetailsState extends State<NotesDetails> {
                     child: TextFormField(
                       validator: (val){
                         if(val!.isEmpty) {
-                          return "Please Enter Notes Title";
+                          return "Please Enter Notes Book Name";
                         }
                       },
-                      controller: Global.title,
+                      controller: Global.book,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 15,),
-                        hintText: "Enter the Notes Title",
+                        contentPadding: const EdgeInsets.symmetric(
+                            horizontal: 15, vertical: 10),
+                        hintText: "Enter the Book Name",
                         hintStyle: GoogleFonts.poppins(color: MyColor.grey),
                         errorStyle: GoogleFonts.poppins(height: 3),
                       ),
@@ -76,7 +77,7 @@ class _NotesDetailsState extends State<NotesDetails> {
                     height: 10,
                   ),
                   const Text(
-                    "Description",
+                    "Author Name",
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
@@ -92,16 +93,14 @@ class _NotesDetailsState extends State<NotesDetails> {
                     child: TextFormField(
                       validator: (val){
                         if(val!.isEmpty) {
-                          return "Please Enter Notes Description";
+                          return "Please Enter Author Name";
                         }
                       },
-                      controller: Global.des,
-                      maxLines: 15,
+                      controller: Global.name,
                       decoration: InputDecoration(
                         border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(
-                            horizontal: 15, vertical: 10),
-                        hintText: "Enter the Notes Description",
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 15,),
+                        hintText: "Enter the Author Name",
                         hintStyle: GoogleFonts.poppins(color: MyColor.grey),
                         errorStyle: GoogleFonts.poppins(height: 3),
                       ),
@@ -117,14 +116,18 @@ class _NotesDetailsState extends State<NotesDetails> {
         backgroundColor: MyColor.themeColor,
         child: const Icon(CupertinoIcons.arrow_right),
         onPressed: () => setState(() {
-          if(Global.notesKey.currentState!.validate()) {
+          if(Global.authorKey.currentState!.validate()) {
             Navigator.pushNamedAndRemoveUntil(context, 'home', (route) => false);
-            Notes note = Notes(title: Global.title.text, des: Global.des.text);
-            if(Global.isNotes == true) {
-              CollectionHelper.instance.updateNote(index!, note);
+            Author author = Author(name: Global.name.text, book: Global.book.text);
+            if(Global.isAuthor == true) {
+              CollectionHelper.instance.updateNote(index!, author);
             } else {
-              CollectionHelper.instance.insertNote(note);
+              CollectionHelper.instance.insertNote(author);
             }
+            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+              content: Text("Author Successfully Added...", style: GoogleFonts.poppins(),),
+              backgroundColor: MyColor.themeColor,
+            ));
           }
         }),
       ),

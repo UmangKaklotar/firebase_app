@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class Global {
-  static List notes = [];
-  static bool isNotes = false;
-  static final notesKey = GlobalKey<FormState>();
-  static TextEditingController title = TextEditingController(),
-      des = TextEditingController();
+  static List authors = [];
+  static bool isAuthor = false;
+  static final authorKey = GlobalKey<FormState>();
+  static TextEditingController name = TextEditingController(),
+      book = TextEditingController();
 }
