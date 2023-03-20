@@ -3,7 +3,7 @@
 A new Flutter project.
 
 
-## 1. Authentication App (Master Branch)
+## 1. Authentication App ( Master Branch )
 
 <table>
   <tr>
