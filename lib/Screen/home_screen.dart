@@ -32,11 +32,12 @@ class _HomeScreenState extends State<HomeScreen> {
               child: Text("Something went Wrong"),
             );
           } else if (snapshot.connectionState == ConnectionState.waiting) {
-            return const Center(
-              child: CircularProgressIndicator(),
+            return Center(
+              child: CircularProgressIndicator(color: MyColor.themeColor),
             );
           } else {
             return ListView.builder(
+              physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.all(15),
               itemCount: snapshot.data!.docs.length,
               itemBuilder: (context, index) {
@@ -51,17 +52,24 @@ class _HomeScreenState extends State<HomeScreen> {
                         color: MyColor.white,
                         borderRadius: BorderRadius.circular(20)),
                     child: ListTile(
-                      onTap: () => Navigator.pushNamed(context, 'note',
-                          arguments: index),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                      ),
+                      onTap: () => setState(() {
+                        Global.isNotes = true;
+                        Navigator.pushNamed(context, 'note', arguments: index);
+                      }),
                       title: Text("${Global.notes[index]['title']}"),
-                      subtitle: Text("${Global.notes[index]['des']}"),
+                      subtitle: Text("${Global.notes[index]['des']}",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                      ),
                       trailing: IconButton(
                         icon: Icon(
                           CupertinoIcons.delete,
                           color: MyColor.red,
                         ),
-                        onPressed: () =>
-                            CollectionHelper.instance.deleteNote(index),
+                        onPressed: () => CollectionHelper.instance.deleteNote(index),
                       ),
                     ),
                   ),
@@ -74,7 +82,10 @@ class _HomeScreenState extends State<HomeScreen> {
       floatingActionButton: FloatingActionButton(
         backgroundColor: MyColor.themeColor,
         child: const Icon(Icons.note_add_rounded),
-        onPressed: () => Navigator.pushNamed(context, 'note'),
+        onPressed: () => setState(() {
+          Global.isNotes = false;
+          Navigator.pushNamed(context, 'note');
+        }),
       ),
       backgroundColor: MyColor.white,
     );

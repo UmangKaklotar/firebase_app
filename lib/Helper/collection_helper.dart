@@ -10,7 +10,17 @@ class CollectionHelper {
   insertNote(Notes note) {
     return notes
         .add(note.toMap())
-        .then((e) => print("Notes Added.."))
+        .then((e) => print("Notes Added..."))
+        .catchError((error) => print("Error : $error"));
+  }
+
+  updateNote(int index, Notes note) async {
+    var docSnap = await notes.get();
+    var doc_id = docSnap.docs;
+    return notes
+        .doc(doc_id[index].id)
+        .update(note.toMap())
+        .then((value) => print("Notes Updated..."))
         .catchError((error) => print("Error : $error"));
   }
 
@@ -20,7 +30,7 @@ class CollectionHelper {
     return notes
         .doc(doc_id[index].id)
         .delete()
-        .then((e) => print("Notes Deleted.."))
+        .then((e) => print("Notes Deleted..."))
         .catchError((error) => print("Error : $error"));
   }
 }
