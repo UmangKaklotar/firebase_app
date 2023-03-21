@@ -27,8 +27,10 @@ class _AuthorDetailsState extends State<AuthorDetails> {
   Widget build(BuildContext context) {
     int? index = ModalRoute.of(context)?.settings.arguments as int?;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Global.name.text = Global.authors[index!]['name'];
-      Global.book.text = Global.authors[index]['book'];
+      if(Global.isAuthor == true) {
+        Global.name.text = Global.authors[index!]['name'];
+        Global.book.text = Global.authors[index]['book'];
+      }
     });
     return Scaffold(
       resizeToAvoidBottomInset: true,
