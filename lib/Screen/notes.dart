@@ -27,8 +27,10 @@ class _NotesDetailsState extends State<NotesDetails> {
   Widget build(BuildContext context) {
     int? index = ModalRoute.of(context)?.settings.arguments as int?;
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Global.title.text = Global.notes[index!]['title'];
-      Global.des.text = Global.notes[index]['des'];
+      if(Global.isNotes == true) {
+        Global.title.text = Global.notes[index!]['title'];
+        Global.des.text = Global.notes[index]['des'];
+      }
     });
     return Scaffold(
       resizeToAvoidBottomInset: true,
