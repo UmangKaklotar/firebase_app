@@ -2,33 +2,6 @@
 
 A new Flutter project.
 
-
-## 1. Authentication App ( Master Branch )
-
-<table>
-  <tr>
-    <td><img src="assets/image/1.png" </td>
-    <td><img src="assets/image/2.png" </td>
-    <td><img src="assets/image/3.png" </td>
-  </tr>
-  <tr>
-    <td><img src="assets/image/4.png" </td>
-    <td><img src="assets/image/5.png" </td>
-    <td><img src="assets/image/6.png" </td>
-  </tr>
-  <tr>
-    <td><img src="assets/image/7.png" </td>
-    <td><img src="assets/image/8.png" </td>
-    <td><img src="assets/image/9.png" </td>
-  </tr>
-  <tr>
-    <td><img src="assets/image/10.png" </td>
-    <td><img src="assets/image/11.png" </td>
-    <td><img src="assets/image/12.png" </td>
-  </tr>
-</table>
-
-
 ## 2. Notekeeper App ( Notekeeper Branch )
 
 <table>
