@@ -2,44 +2,18 @@
 
 A new Flutter project.
 
-
-## 1. Authentication App ( Master Branch )
-
-<table>
-  <tr>
-    <td><img src="assets/image/1.png" </td>
-    <td><img src="assets/image/2.png" </td>
-    <td><img src="assets/image/3.png" </td>
-  </tr>
-  <tr>
-    <td><img src="assets/image/4.png" </td>
-    <td><img src="assets/image/5.png" </td>
-    <td><img src="assets/image/6.png" </td>
-  </tr>
-  <tr>
-    <td><img src="assets/image/7.png" </td>
-    <td><img src="assets/image/8.png" </td>
-    <td><img src="assets/image/9.png" </td>
-  </tr>
-  <tr>
-    <td><img src="assets/image/10.png" </td>
-    <td><img src="assets/image/11.png" </td>
-    <td><img src="assets/image/12.png" </td>
-  </tr>
-</table>
-
-
-## 2. Notekeeper App ( Notekeeper Branch )
+## 3. Author App ( Author Branch )
 
 <table>
   <tr>
-    <td><img src="assets/image/13.png" </td>
-    <td><img src="assets/image/14.png" </td>
-    <td><img src="assets/image/15.png" </td>
+    <td><img src="assets/image/18.png" </td>
+    <td><img src="assets/image/19.png" </td>
+    <td><img src="assets/image/20.png" </td>
   </tr>
   <tr>
-    <td><img src="assets/image/16.png" </td>
-    <td><img src="assets/image/17.png" </td>
+    <td><img src="assets/image/21.png" </td>
+    <td><img src="assets/image/22.png" </td>
+    <td><img src="assets/image/23.png" </td>
   </tr>
 </table>
 
